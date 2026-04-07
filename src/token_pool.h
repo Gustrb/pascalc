@@ -18,6 +18,7 @@ typedef struct
 void token_pool_init(token_pool_t *pool);
 
 error_t token_pool_alloc(token_pool_t *pool, uint8_t *index);
+void token_pool_alloc_blocking(token_pool_t *pool, uint8_t *index);
 error_t token_pool_push(token_pool_t *pool, uint8_t index);
 error_t token_pool_pull(token_pool_t *pool, uint8_t *index);
 error_t token_pool_release(token_pool_t *pool, uint8_t index);

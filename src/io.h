@@ -13,8 +13,8 @@ typedef struct
   const char *addr;
 } memory_mapped_file_t;
 
-error_t memory_mapped_file_from_path(memory_mapped_file_t *mmf, const char *path);
-void memory_mapped_file_cleanup(memory_mapped_file_t *mmf);
-const char *memory_mapped_error(error_t error);
+PUBLIC error_t memory_mapped_file_from_path(memory_mapped_file_t *mmf, const char *path);
+PUBLIC void memory_mapped_file_cleanup(memory_mapped_file_t *mmf);
+PUBLIC const char *memory_mapped_error(error_t error);
 
 #endif

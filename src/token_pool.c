@@ -18,6 +18,13 @@ PUBLIC error_t token_pool_alloc(token_pool_t *pool, uint8_t *index)
   return ring_buffer_pull(&pool->free_list, index);
 }
 
+PUBLIC void token_pool_alloc_blocking(token_pool_t *pool, uint8_t *index)
+{
+  while (token_pool_alloc(pool, index) != ERR_NO_ERROR)
+  {
+  }
+}
+
 PUBLIC error_t token_pool_push(token_pool_t *pool, uint8_t index)
 {
   return ring_buffer_put(&pool->ready, index);
