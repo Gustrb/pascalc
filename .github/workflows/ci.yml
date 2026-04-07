@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create output directories
+        run: mkdir -p dist/tests
+
+      - name: Build
+        run: make all
+
+      - name: Build tests
+        run: make tests
+
+      - name: Run tests
+        run: sh scripts/run-tests.sh
