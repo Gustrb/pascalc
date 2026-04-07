@@ -1,7 +1,9 @@
 #include "ring_buffer.h"
+#include "common.h"
 #include <stdatomic.h>
 
 #define ERR_BUFFER_FULL 1
+#define ERR_BUFFER_EMPTY 2
 
 void ring_buffer_init(ring_buffer_t *rb)
 {
@@ -16,7 +18,7 @@ error_t ring_buffer_pull(ring_buffer_t *rb, uint8_t *out)
   uint8_t tail = atomic_load(&rb->tail);
   if (tail == atomic_load(&rb->head))
   {
-    return ERR_BUFFER_FULL;
+    return ERR_BUFFER_EMPTY;
   }
 
   uint8_t item = rb->buffer[tail];
@@ -30,6 +32,22 @@ error_t ring_buffer_pull(ring_buffer_t *rb, uint8_t *out)
   *out = item;
 
   return 0;
+}
+
+error_t ring_buffer_put(ring_buffer_t *rb, uint8_t val)
+{
+  uint8_t head = atomic_load(&rb->head);
+  uint8_t next_head = head+1;
+
+  if (next_head == atomic_load(&rb->tail))
+  {
+    return ERR_BUFFER_FULL;
+  }
+
+  rb->buffer[head] = val;
+  atomic_store(&rb->head, next_head);
+
+  return ERR_NO_ERROR;
 }
 
 const char *ring_buffer_error(error_t error)

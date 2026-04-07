@@ -14,6 +14,7 @@ typedef struct
 
 void ring_buffer_init(ring_buffer_t *);
 error_t ring_buffer_pull(ring_buffer_t *, uint8_t *v);
+error_t ring_buffer_put(ring_buffer_t *, uint8_t);
 const char *ring_buffer_error(error_t error);
 
 #endif

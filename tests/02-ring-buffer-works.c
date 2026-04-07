@@ -3,6 +3,7 @@
 
 b8_t should_be_able_to_create_a_ring_buffer(void);
 b8_t should_fail_when_pulling_from_an_empty_ring_buffer(void);
+b8_t should_be_able_to_put_stuff_in_the_ring_buffer(void);
 
 int main(void)
 {
@@ -15,6 +16,12 @@ int main(void)
   {
     return 1;
   }
+
+  if (should_be_able_to_put_stuff_in_the_ring_buffer())
+  {
+    return 1;
+  }
+
 
   return 0;
 }
@@ -37,9 +44,23 @@ b8_t should_fail_when_pulling_from_an_empty_ring_buffer(void)
 {
   START_CASE;
   ring_buffer_t rb = {0};
+  ring_buffer_init(&rb);
   uint8_t res = 0;
   error_t err = ring_buffer_pull(&rb, &res);
   ASSERT_NEQ(err, ERR_NO_ERROR);
+  PASS_CASE;
+  return 0;
+}
+
+b8_t should_be_able_to_put_stuff_in_the_ring_buffer(void)
+{
+  START_CASE;
+  ring_buffer_t rb = {0};
+  ring_buffer_init(&rb);
+
+  error_t err = ring_buffer_put(&rb, 12);
+  ASSERT_EQ(err, ERR_NO_ERROR);
+  ASSERT_NEQ(rb.head, rb.tail);
   PASS_CASE;
   return 0;
 }
