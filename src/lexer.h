@@ -17,6 +17,6 @@ typedef struct
   char ch;
 } lexer_t;
 
-PUBLIC error_t lexer_init(lexer_t *lexer, token_pool_t *pool, memory_mapped_file_t *mmpf);
+PUBLIC void lexer_init(lexer_t *lexer, token_pool_t *pool, memory_mapped_file_t *mmpf);
 
 #endif
