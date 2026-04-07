@@ -1,0 +1,22 @@
+#ifndef RING_BUFFER_H
+#define RING_BUFFER_H
+
+#include <stdatomic.h>
+#include "common.h"
+
+#define RING_BUFFER_LEN (1 << 8)
+
+typedef struct
+{
+  uint8_t buffer[RING_BUFFER_LEN];
+
+  _Atomic uint8_t head;
+  _Atomic uint8_t tail;
+} ring_buffer_t;
+
+void ring_buffer_init(ring_buffer_t *);
+error_t ring_buffer_pull(ring_buffer_t *, uint8_t *v);
+error_t ring_buffer_put(ring_buffer_t *, uint8_t);
+const char *ring_buffer_error(error_t error);
+
+#endif
