@@ -23,7 +23,6 @@ int main(void)
     return 1;
   }
 
-
   if (should_be_able_to_fill_a_ring_buffer())
   {
     return 1;
@@ -74,7 +73,7 @@ b8_t should_be_able_to_put_stuff_in_the_ring_buffer(void)
 
 b8_t should_be_able_to_fill_a_ring_buffer(void)
 {
-  
+
   START_CASE;
   ring_buffer_t rb = {0};
   ring_buffer_init(&rb);
@@ -88,14 +87,14 @@ b8_t should_be_able_to_fill_a_ring_buffer(void)
 
   ASSERT_NEQ(err, ERR_NO_ERROR);
 
-  int32_t total = (255 * (256))/2;
+  int32_t total = (255 * (256)) / 2;
   int32_t sum = 0;
   err = ERR_NO_ERROR;
 
   while (err == ERR_NO_ERROR)
   {
     uint8_t v = 0;
-    err  = ring_buffer_pull(&rb, &v);
+    err = ring_buffer_pull(&rb, &v);
     if (v != 0)
     {
       sum += v;
@@ -105,4 +104,5 @@ b8_t should_be_able_to_fill_a_ring_buffer(void)
   ASSERT_EQ(total, sum);
 
   PASS_CASE;
-  return 0;}
+  return 0;
+}

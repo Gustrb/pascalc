@@ -2,7 +2,7 @@
 #include "common.h"
 #include <stdatomic.h>
 
-#define ERR_BUFFER_FULL 1
+#define ERR_BUFFER_FULL  1
 #define ERR_BUFFER_EMPTY 2
 
 void ring_buffer_init(ring_buffer_t *rb)
@@ -37,7 +37,7 @@ error_t ring_buffer_pull(ring_buffer_t *rb, uint8_t *out)
 error_t ring_buffer_put(ring_buffer_t *rb, uint8_t val)
 {
   uint8_t head = atomic_load(&rb->head);
-  uint8_t next_head = head+1;
+  uint8_t next_head = head + 1;
 
   if (next_head == atomic_load(&rb->tail))
   {
