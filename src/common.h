@@ -14,6 +14,8 @@ typedef int32_t error_t;
 #define MAX2(a, b) (a) < (b) ? (b) : (a)
 #define MIN2(a, b) (a) < (b) ? (a) : (b)
 
+#define ABS(a) (a) < 0 ? -1 * (a) : (a)
+
 #define ERR_NO_ERROR 0
 
 #define PUBLIC

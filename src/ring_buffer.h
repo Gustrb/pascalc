@@ -4,9 +4,11 @@
 #include <stdatomic.h>
 #include "common.h"
 
+#define RING_BUFFER_LEN (1 << 8)
+
 typedef struct
 {
-  uint8_t buffer[256];
+  uint8_t buffer[RING_BUFFER_LEN];
 
   _Atomic uint8_t head;
   _Atomic uint8_t tail;
