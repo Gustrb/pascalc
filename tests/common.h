@@ -1,6 +1,8 @@
 #ifndef TEST_COMMON_H
 #define TEST_COMMON_H
 
+#include "../src/common.h"
+
 #define ASSERT_EQ(a, b) \
   if (a != b)           \
   {                     \
