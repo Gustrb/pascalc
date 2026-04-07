@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check formatting
+        run: clang-format --dry-run --Werror src/*.c src/*.h tests/*.c
+
       - name: Create output directories
         run: mkdir -p dist/tests
 

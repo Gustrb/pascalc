@@ -3,25 +3,22 @@
 #include <unistd.h>
 #include "../src/io.h"
 
-#define ASSERT_EQ(a, b) \
-  if (a != b)           \
-  {                     \
-    fail(__func__, "assertion failed", __LINE__); \
-    return 1;                           \
+#define ASSERT_EQ(a, b)                                                                            \
+  if (a != b)                                                                                      \
+  {                                                                                                \
+    fail(__func__, "assertion failed", __LINE__);                                                  \
+    return 1;                                                                                      \
   }
 
-
-#define ASSERT_NEQ(a, b) \
-  if (a == b)           \
-  {                     \
-    fail(__func__, "assertion failed", __LINE__); \
-    return 1;                           \
+#define ASSERT_NEQ(a, b)                                                                           \
+  if (a == b)                                                                                      \
+  {                                                                                                \
+    fail(__func__, "assertion failed", __LINE__);                                                  \
+    return 1;                                                                                      \
   }
 
-#define START_CASE \
-  fprintf(stdout, "[TEST]: Running (%s)\n", __func__);
-#define PASS_CASE \
-  fprintf(stdout, "[TEST]: Pass (%s)\n", __func__);
+#define START_CASE fprintf(stdout, "[TEST]: Running (%s)\n", __func__);
+#define PASS_CASE  fprintf(stdout, "[TEST]: Pass (%s)\n", __func__);
 
 void fail(const char *casename, const char *message, int line)
 {
@@ -35,8 +32,7 @@ b8_t should_unmap_the_file_correctly(void);
 memory_mapped_file_t resources_to_cleanup[1024];
 size_t resources_to_cleanup_len = 0;
 
-#define PUSH_RESOURCE(f) \
-  resources_to_cleanup[resources_to_cleanup_len++] = f;
+#define PUSH_RESOURCE(f) resources_to_cleanup[resources_to_cleanup_len++] = f;
 
 void cleanup(void)
 {
@@ -100,7 +96,7 @@ b8_t should_map_the_file_correctly(void)
 
   for (uint32_t i = 0; i < f.size; ++i)
   {
-    ASSERT_EQ(buff[i], f.addr[i]);    
+    ASSERT_EQ(buff[i], f.addr[i]);
   }
 
   PASS_CASE;

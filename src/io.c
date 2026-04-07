@@ -11,7 +11,7 @@
 
 PUBLIC error_t memory_mapped_file_from_path(memory_mapped_file_t *mmf, const char *path)
 {
-  assert(mmf  != NULL);
+  assert(mmf != NULL);
   assert(path != NULL);
 
   int32_t fd = open(path, O_RDONLY);
@@ -42,7 +42,11 @@ PUBLIC error_t memory_mapped_file_from_path(memory_mapped_file_t *mmf, const cha
 PUBLIC void memory_mapped_file_cleanup(memory_mapped_file_t *mmf)
 {
   // Little hack to not have to downcast const
-  union { const char *a; void *b; } data = { .a = mmf->addr };
+  union
+  {
+    const char *a;
+    void *b;
+  } data = {.a = mmf->addr};
 
   close(mmf->fd);
   munmap(data.b, mmf->size);
