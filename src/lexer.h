@@ -18,5 +18,6 @@ typedef struct
 } lexer_t;
 
 PUBLIC void lexer_init(lexer_t *lexer, token_pool_t *pool, memory_mapped_file_t *mmpf);
+PUBLIC void lexer_lex_file(lexer_t *lexer);
 
 #endif

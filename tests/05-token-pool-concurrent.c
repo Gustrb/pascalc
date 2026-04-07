@@ -1,6 +1,8 @@
+#define _DEFAULT_SOURCE
 #include "../src/token_pool.h"
 #include "common.h"
 #include <pthread.h>
+#include <unistd.h>
 
 #define NUM_ITEMS 200
 
@@ -17,7 +19,7 @@ static void *producer(void *arg)
       // Free list empty, spin until consumer releases a slot
     }
 
-    pool.tokens[idx]._[0] = (char)i;
+    pool.tokens[idx].type = (token_type_t)i;
 
     while (token_pool_push(&pool, idx) != ERR_NO_ERROR)
     {
@@ -39,7 +41,7 @@ static void *consumer(void *arg)
       // Ready queue empty, spin until producer pushes
     }
 
-    *sum += (uint8_t)pool.tokens[idx]._[0];
+    *sum += (uint8_t)pool.tokens[idx].type;
 
     while (token_pool_release(&pool, idx) != ERR_NO_ERROR)
     {
@@ -52,6 +54,7 @@ static void *consumer(void *arg)
 b8_t should_produce_and_consume_tokens_concurrently(void);
 b8_t should_preserve_all_tokens_across_threads(void);
 b8_t should_survive_multiple_rounds(void);
+b8_t should_alloc_blocking_wait_for_release(void);
 
 int main(void)
 {
@@ -60,6 +63,8 @@ int main(void)
   if (should_preserve_all_tokens_across_threads())
     return 1;
   if (should_survive_multiple_rounds())
+    return 1;
+  if (should_alloc_blocking_wait_for_release())
     return 1;
 
   return 0;
@@ -162,6 +167,53 @@ b8_t should_survive_multiple_rounds(void)
     int32_t expected = NUM_ITEMS * (NUM_ITEMS + 1) / 2;
     ASSERT_EQ(consumed_sum, expected);
   }
+
+  PASS_CASE;
+  return 0;
+}
+
+static void *blocking_alloc_thread(void *arg)
+{
+  uint8_t *out = (uint8_t *)arg;
+  token_pool_alloc_blocking(&pool, out);
+  return NULL;
+}
+
+b8_t should_alloc_blocking_wait_for_release(void)
+{
+  START_CASE;
+
+  token_pool_init(&pool);
+
+  // Drain all free slots
+  uint8_t slots[RING_BUFFER_LEN];
+  for (int i = 0; i < RING_BUFFER_LEN - 1; i++)
+  {
+    error_t err = token_pool_alloc(&pool, &slots[i]);
+    ASSERT_EQ(err, ERR_NO_ERROR);
+  }
+
+  // Non-blocking alloc should fail now
+  uint8_t tmp = 0;
+  error_t err = token_pool_alloc(&pool, &tmp);
+  ASSERT_NEQ(err, ERR_NO_ERROR);
+
+  // Spawn a thread that blocks on alloc
+  uint8_t result_idx = 0;
+  pthread_t blocker;
+  pthread_create(&blocker, NULL, blocking_alloc_thread, &result_idx);
+
+  // Give the thread time to enter the spin loop
+  usleep(10000);
+
+  // Release one slot — this should unblock the thread
+  uint8_t released = slots[0];
+  token_pool_release(&pool, released);
+
+  pthread_join(blocker, NULL);
+
+  // The blocked thread should have gotten the released slot
+  ASSERT_EQ(result_idx, released);
 
   PASS_CASE;
   return 0;

@@ -75,7 +75,7 @@ b8_t should_push_and_pull_through_ready(void)
   error_t err = token_pool_alloc(&pool, &idx);
   ASSERT_EQ(err, ERR_NO_ERROR);
 
-  pool.tokens[idx]._[0] = 'A';
+  pool.tokens[idx].type = TOKEN_TYPE_BEGIN;
 
   err = token_pool_push(&pool, idx);
   ASSERT_EQ(err, ERR_NO_ERROR);
@@ -84,7 +84,7 @@ b8_t should_push_and_pull_through_ready(void)
   err = token_pool_pull(&pool, &pulled);
   ASSERT_EQ(err, ERR_NO_ERROR);
   ASSERT_EQ(idx, pulled);
-  ASSERT_EQ(pool.tokens[pulled]._[0], 'A');
+  ASSERT_EQ(pool.tokens[pulled].type, TOKEN_TYPE_BEGIN);
 
   PASS_CASE;
   return 0;
