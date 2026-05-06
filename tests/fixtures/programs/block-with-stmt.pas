@@ -1,0 +1,1 @@
+begin writeln('hi') end.

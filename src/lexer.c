@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "common.h"
+#include "token.h"
 
 #include <string.h>
 
@@ -42,6 +43,10 @@ PUBLIC void lexer_lex_file(lexer_t *lexer)
     {
     case ';':
       tok->type = TOKEN_TYPE_SEMICOLON;
+      lexer_read_char(lexer);
+      break;
+    case ',':
+      tok->type = TOKEN_TYPE_COMMA;
       lexer_read_char(lexer);
       break;
     case '.':

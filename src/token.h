@@ -17,6 +17,7 @@ typedef enum
   TOKEN_TYPE_PERIOD,
   TOKEN_TYPE_LPAREN,
   TOKEN_TYPE_RPAREN,
+  TOKEN_TYPE_COMMA,
 
   TOKEN_TYPE_EOF,
 } token_type_t;
