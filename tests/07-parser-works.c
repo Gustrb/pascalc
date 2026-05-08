@@ -36,14 +36,18 @@ typedef struct
 static b8_t setup_load(setup_t *s, const char *path)
 {
   memset(s, 0, sizeof(*s));
-  if (memory_mapped_file_from_path(&s->f, path) != ERR_NO_ERROR) return 1;
+  if (memory_mapped_file_from_path(&s->f, path) != ERR_NO_ERROR)
+    return 1;
   PUSH_RESOURCE(s->f);
   token_pool_init(&s->tpool);
   lexer_init(&s->lex, &s->tpool, &s->f);
   lexer_lex_file(&s->lex);
-  if (node_pool_init(&s->npool) != ERR_NO_ERROR) return 1;
-  if (cipool_init(&s->cpool) != ERR_NO_ERROR) return 1;
-  if (parser_init(&s->parser, &s->tpool, &s->npool, &s->cpool) != ERR_NO_ERROR) return 1;
+  if (node_pool_init(&s->npool) != ERR_NO_ERROR)
+    return 1;
+  if (cipool_init(&s->cpool) != ERR_NO_ERROR)
+    return 1;
+  if (parser_init(&s->parser, &s->tpool, &s->npool, &s->cpool) != ERR_NO_ERROR)
+    return 1;
   return 0;
 }
 
@@ -53,8 +57,8 @@ static void setup_unload(setup_t *s)
   cipool_cleanup(&s->cpool);
 }
 
-#define ASSERT_SV(sv, lit)                              \
-  ASSERT_EQ((sv).len, (uint32_t)strlen(lit))            \
+#define ASSERT_SV(sv, lit)                                                                         \
+  ASSERT_EQ((sv).len, (uint32_t)strlen(lit))                                                       \
   ASSERT_EQ(memcmp((sv).addr, (lit), (sv).len), 0)
 
 b8_t should_init_parser(void);

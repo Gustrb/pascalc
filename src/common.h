@@ -16,7 +16,7 @@ typedef int32_t error_t;
 
 #define ABS(a) (a) < 0 ? -1 * (a) : (a)
 
-#define ERR_NO_ERROR 0
+#define ERR_NO_ERROR      0
 #define ERR_OUT_OF_MEMORY 9999
 
 #ifndef PUBLIC

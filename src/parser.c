@@ -5,17 +5,20 @@
 #include "token_pool.h"
 #include <stdint.h>
 
-#define NODE_POOL_INITIAL_CAPACITY 2048
+#define NODE_POOL_INITIAL_CAPACITY        2048
 #define CHILD_INDEX_POOL_INITIAL_CAPACITY 2048
 
 #define TOKEN_AT(p, idx) (p)->token_pool->tokens[(idx)]
-#define NODE_AT(p, idx) (p)->node_pool->pool[(idx)]
+#define NODE_AT(p, idx)  (p)->node_pool->pool[(idx)]
 
-#define GRACEFULLY_HANDLE_IT(err) do { \
-    if (err != ERR_NO_ERROR) return err; \
-  } while(0)
+#define GRACEFULLY_HANDLE_IT(err)                                                                  \
+  do                                                                                               \
+  {                                                                                                \
+    if (err != ERR_NO_ERROR)                                                                       \
+      return err;                                                                                  \
+  } while (0)
 
-#define ERR_WRONG_TOKEN_TYPE 1234
+#define ERR_WRONG_TOKEN_TYPE    1234
 #define ERR_TOO_MANY_STATEMENTS 1235
 
 PRIVATE error_t __parser_next_token(parser_t *parser);
@@ -29,7 +32,8 @@ PRIVATE error_t __parser_parse_expression(parser_t *parser, uint64_t *output);
 PRIVATE error_t __parser_parse_call(parser_t *parser, uint64_t *output);
 PRIVATE error_t __parser_parse_string_literal(parser_t *parser, uint64_t *output);
 
-PUBLIC error_t parser_init(parser_t *parser, token_pool_t *token_pool, node_pool_t *pool, child_index_pool_t *child_pool)
+PUBLIC error_t parser_init(parser_t *parser, token_pool_t *token_pool, node_pool_t *pool,
+                           child_index_pool_t *child_pool)
 {
   parser->curr_token_idx = 0;
   parser->peek_token_idx = 0;
@@ -133,7 +137,7 @@ PRIVATE error_t __parser_parse_block(parser_t *parser, uint64_t *output)
 
   err = __parser_next_token(parser);
   GRACEFULLY_HANDLE_IT(err);
-  
+
   uint64_t start = parser->child_pool->len;
   for (uint64_t i = 0; i < n; ++i)
   {
@@ -159,8 +163,10 @@ PRIVATE error_t __parser_parse_statement(parser_t *parser, uint64_t *output)
 
   if (curr == TOKEN_TYPE_IDENTIFIER)
   {
-    if (peek == TOKEN_TYPE_LPAREN) return __parser_parse_call(parser, output);
-    else return ERR_WRONG_TOKEN_TYPE;
+    if (peek == TOKEN_TYPE_LPAREN)
+      return __parser_parse_call(parser, output);
+    else
+      return ERR_WRONG_TOKEN_TYPE;
   }
 
   return ERR_NO_ERROR;
@@ -180,7 +186,6 @@ PRIVATE error_t __parser_parse_call(parser_t *parser, uint64_t *output)
   err = __parser_next_token(parser);
   GRACEFULLY_HANDLE_IT(err);
 
-  
   uint64_t scratch[SCRATCH_CAP] = {0};
   uint64_t n = 0;
   while (TOKEN_AT(parser, parser->curr_token_idx).type != TOKEN_TYPE_RPAREN)
@@ -190,7 +195,8 @@ PRIVATE error_t __parser_parse_call(parser_t *parser, uint64_t *output)
       return ERR_TOO_MANY_STATEMENTS;
     }
 
-    uint64_t expr_idx;;
+    uint64_t expr_idx;
+    ;
     err = __parser_parse_expression(parser, &expr_idx);
     GRACEFULLY_HANDLE_IT(err);
     scratch[n++] = expr_idx;
@@ -200,7 +206,7 @@ PRIVATE error_t __parser_parse_call(parser_t *parser, uint64_t *output)
       err = __parser_next_token(parser);
       GRACEFULLY_HANDLE_IT(err);
     }
-  } 
+  }
 
   err = __parser_expect_token_to_be(parser, TOKEN_TYPE_RPAREN);
   GRACEFULLY_HANDLE_IT(err);
@@ -368,4 +374,3 @@ PRIVATE error_t __parser_expect_token_to_be(parser_t *parser, token_type_t t)
 
   return ERR_NO_ERROR;
 }
-

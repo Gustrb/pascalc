@@ -5,7 +5,8 @@
 #include "token.h"
 #include "token_pool.h"
 
-typedef enum {
+typedef enum
+{
   NODE_TYPE_PROGRAM,
   NODE_TYPE_IDENTIFIER,
   NODE_TYPE_BLOCK,
@@ -18,7 +19,8 @@ typedef struct
 {
   node_type_t type;
 
-  union {
+  union
+  {
     string_view_t sv;
   } data;
 
@@ -38,7 +40,6 @@ typedef struct
 
 PUBLIC error_t node_pool_init(node_pool_t *node_pool);
 PUBLIC void node_pool_cleanup(node_pool_t *node_pool);
-
 
 PUBLIC error_t node_pool_alloc(node_pool_t *pool, uint64_t *out);
 
@@ -67,7 +68,8 @@ typedef struct
   uint8_t peek_token_idx;
 } parser_t;
 
-PUBLIC error_t parser_init(parser_t *parser, token_pool_t *token_pool, node_pool_t *node_pool, child_index_pool_t *child_pool);
+PUBLIC error_t parser_init(parser_t *parser, token_pool_t *token_pool, node_pool_t *node_pool,
+                           child_index_pool_t *child_pool);
 PUBLIC error_t parser_parse(parser_t *parser, uint64_t *out);
 
 #endif
